@@ -1,0 +1,44 @@
+Configuration:
+  status: debug
+  Appenders:
+    Console:
+      name: Console
+      PatternLayout:
+        Pattern: "%highlight{%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%level] sso-server %t %logger{1.}:%L %X{request_id} %msg%n}{%throwable{short.fileName}}{FATAL=white,ERROR=red,
+          WARN=blue, INFO=black, DEBUG=green, TRACE=blue}"
+      target: SYSTEM_OUT
+
+    RollingFile:
+      - name: RollingFile_Appender
+        #/Users/lizhaoyang/data/logs/jenkins-demo/dev/jenkins-demo.log
+        fileName: ./root/apps/logs/sso-server.log
+        #      日志rolling后存放的目录
+        filePattern: "./root/apps/logs/sso-server-log-%d{yyyy-MM-dd}.%i.log"
+        PatternLayout:
+          Pattern: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%level] sso-server %t %logger{1.}:%L %X{request_id} %msg%n"
+        Policies:
+          TimeBasedTriggeringPolicy:
+            interval: 1
+          SizeBasedTriggeringPolicy:
+            size: 512M
+          DefaultRollOverStrategy:
+            max: 30
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: Console
+        - ref: RollingFile_Appender
+    Logger:
+      - name: org.mybatis
+        additivity: false
+        level: debug
+        AppenderRef:
+          - ref: CONSOLE
+      - name: com.alibaba
+        additivity: false
+        level: debug
+        AppenderRef:
+          - ref: CONSOLE
+
